@@ -1,0 +1,7 @@
+*.pyc
+playground/
+
+schema/google/
+schema/*.py
+schema/*.pyi
+schema/*.exe

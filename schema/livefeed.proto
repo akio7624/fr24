@@ -1,0 +1,235 @@
+syntax = "proto3";
+package fr24.livefeed;
+
+import "google/protobuf/field_mask.proto";
+
+
+
+
+
+enum AircraftCategory {
+  PASSENGER = 0;
+  CARGO = 1;
+  MILITARY_AND_GOVERNMENT = 2;
+  BUSINESS_JETS = 3;
+  GENERAL_AVIATION = 4;
+  HELICOPTERS = 5;
+  LIGHTER_THAN_AIR = 6;
+  GLIDERS = 7;
+  DRONES = 8;
+  GROUND_VEHICLES = 9;
+  OTHER_SERVICE = 10;
+  NON_CATEGORIZED = 11;
+}
+
+enum DataSource {
+  ADSB = 0;
+  MLAT = 1;
+  FLARM = 2;
+  FAA = 3;
+  ESTIMATED = 4;
+  SATELLITE = 5;
+  OTHER_DATA_SOURCE = 6;
+  UAT = 7;
+  SPIDERTRACKS = 8;
+  AUS = 9;
+}
+
+enum TrafficType {
+  NONE = 0;
+  GROUND_ONLY = 1;
+  AIRBORNE_ONLY = 2;
+  ALL = 3;
+}
+
+enum VisibilityMode {
+  NOT_VISIBLE = 0;
+  PARTIALLY_VISIBLE = 1;
+  FULLY_VISIBLE = 2;
+}
+
+enum Direction {
+  BOTH = 0;
+  INBOUND = 1;
+  OUTBOUND = 2;
+}
+
+enum AirlineOperatorMode {
+  PAINTED_AS = 0;
+  OPERATED_BY = 1;
+}
+
+enum FlightStatus {
+  STATUS_UNKNOWN = 0;
+  STATUS_ON_TIME = 1;
+  STATUS_DELAYED = 2;
+  STATUS_DIVERTED = 3;
+}
+
+enum IconType {
+  ICON_UNKNOWN = 0;
+  ICON_AIRLINER = 1;
+  ICON_HELICOPTER = 2;
+  ICON_GLIDER = 3;
+  ICON_DRONE = 4;
+  ICON_OTHER = 5;
+}
+
+
+
+
+
+
+message IntRange {
+  int32 min = 1;
+  int32 max = 2;
+}
+
+message AirlineFilter {
+  string icao = 1;
+  AirlineOperatorMode mode = 2;
+}
+
+message LocationFilter {
+  string iata = 1;
+  int32 country = 2;
+  Direction direction = 3;
+}
+
+message Bounds {
+  float north = 1;
+  float south = 2;
+  float west = 3;
+  float east = 4;
+}
+
+message Settings {
+  repeated DataSource sources = 1;
+  repeated AircraftCategory services = 2;
+  TrafficType traffic_type = 3;
+  bool only_restricted = 4;
+}
+
+message Filters {
+  repeated IntRange altitude_ranges = 1;
+  repeated IntRange speed_ranges = 2;
+  repeated AirlineFilter airlines = 3;
+  repeated string callsigns = 4;
+  repeated string radars = 5;
+  repeated string regs = 6;
+  repeated LocationFilter airports = 7;
+  repeated string flights = 8;
+  repeated string types = 9;
+  repeated IntRange birth_year_ranges = 10;
+  repeated int32 squawks = 11;
+  repeated LocationFilter origins = 12;
+  repeated LocationFilter destinations = 13;
+  repeated AircraftCategory categories = 14;
+  repeated string airspaces = 15;
+}
+
+message PositionDelta {
+  int32 delta_lat = 1;
+  int32 delta_lon = 2;
+  int32 delta_ms  = 3;
+}
+
+message PositionBuffer {
+  repeated PositionDelta recent_positions = 1;
+}
+
+message StatsItem {
+  DataSource source = 1;
+  int32 count = 2;
+}
+
+message Stats {
+  repeated StatsItem total = 1;
+}
+
+message RouteInfo {
+  string route = 1;
+}
+
+message ScheduleInfo {
+  int32 departure_time = 1;
+  int32 arrival_time = 2;
+}
+
+message EmsAvailability {
+  int32 level = 1;
+}
+
+message EmsInfo {
+  string details = 1;
+}
+
+message ExtraInfo {
+  string flight = 1;
+  string reg = 2;
+  RouteInfo route = 3;
+  string type = 4;
+  int32 squawk = 5;
+  int32 vspeed = 6;
+  string age = 7;
+  int32 country_of_reg = 8;
+  ScheduleInfo schedule = 9;
+  int32 logo_id = 10;
+  string airspace = 11;
+  EmsInfo ems_info = 12;
+  EmsAvailability ems_availability = 13;
+  int32 icao_address = 14;
+  int32 operated_by_id = 15;
+  bool squawk_availability = 16;
+  bool vspeed_availability = 17;
+  bool airspace_availability = 18;
+  string airspace_id = 19;
+}
+
+message Flight {
+  int32 flight_id = 1;
+  float lat = 2;
+  float lon = 3;
+  int32 track = 4;
+  int32 alt = 5;
+  int32 speed = 6;
+  IconType icon = 7;
+  FlightStatus status = 8;
+  int64 timestamp = 9;
+  bool on_ground = 10;
+  string callsign = 11;
+  DataSource source = 12;
+  ExtraInfo extra_info = 13;
+  PositionBuffer position_buffer = 14;
+  int64 timestamp_ms = 15;
+}
+
+
+
+
+
+
+
+
+
+
+message LiveFeedRequest {
+  Bounds bounds = 1;
+  Settings settings = 2;
+  repeated Filters filters = 3;
+  repeated string fleets = 4;
+  bool highlight_mode = 5;
+  bool stats = 6;
+  int32 limit = 7;
+  int32 maxage = 8;
+  VisibilityMode restriction_mode = 9;
+  google.protobuf.FieldMask field_mask = 10;
+  repeated int32 selected_flight_ids = 11;
+}
+
+message LiveFeedResponse {
+  repeated Flight flights = 1;
+  Stats stats = 2;
+  repeated Flight selected_flights = 3;
+  int64 server_time_ms = 4;
+}
