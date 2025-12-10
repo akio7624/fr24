@@ -1,5 +1,6 @@
 *.pyc
 playground/
+testground/
 
 schema/google/
 schema/*.py
