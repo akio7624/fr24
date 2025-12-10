@@ -1,0 +1,136 @@
+syntax = "proto3";
+package fr24.followflight;
+
+
+
+
+
+enum FlightSource {
+    SOURCE_UNKNOWN = 0;
+    ADSB = 1;
+    MLAT = 2;
+    FLARM = 3;
+    FAA = 4;
+    AUSTRALIA = 5;
+    SPIDERTRACKS = 6;
+    UAT = 7;
+    ESTIMATED = 8;
+    OTHER_DATA_SOURCE = 9;
+}
+
+enum FlightStatus {
+    STATUS_UNKNOWN = 0;
+    NORMAL = 1;
+    BACKGROUND = 2;
+    EMERGENCY = 3;
+}
+
+
+
+
+
+
+message PhotoInfo {
+    string photo_url = 1;
+    string author = 2;
+    string thumb_url = 3;
+    string medium_url = 4;
+    string large_url = 5;
+}
+
+message AircraftInfo {
+    int32 hex_id = 1;
+    string registration = 2;
+    string icao_type = 4;
+    int32 version = 5;
+    string model_name = 6;
+    int32 flag = 8;
+    repeated PhotoInfo photos = 11;
+    int32 airline_id = 13;
+    int32 airline_logo = 14;
+    string airline_name = 15;
+    int32 airline_country = 16;
+}
+
+message FlightSchedule {
+    string flight_number = 1;
+    int32 dep_airport_id = 2;
+    int32 arr_airport_id = 3;
+    int32 scheduled_out = 4;
+    int32 scheduled_in = 5;
+    int64 offblock_time = 7;
+    int64 onblock_time = 8;
+    int64 actual_out = 9;
+    string misc = 13;
+}
+
+message PerformanceStats {
+    int32 value1 = 1;
+    int32 value2 = 2;
+    int32 value3 = 3;
+    int32 value4 = 4;
+    int64 timestamp = 5;
+    int32 value6 = 6;
+    int32 value7 = 7;
+    int32 value8 = 8;
+    int32 value9 = 9;
+    int32 value10 = 10;
+}
+
+message FlightData {
+    int32 flight_id = 1;
+    float lat = 2;
+    float lon = 3;
+    int32 track = 4;
+    int32 altitude = 5;
+    int32 speed = 6;
+    bool on_ground = 7;
+    int64 timestamp_ms = 8;
+    int64 misc9 = 9;
+    string callsign = 10;
+    FlightSource source = 11;
+    string misc12 = 12;
+
+    bool flag14 = 14;
+    bool flag16 = 16;
+    bool flag18 = 18;
+
+    int64 timestamp2_ms = 21;
+}
+
+message PositionHistory {
+    int64 timestamp = 1;
+    float lat = 2;
+    float lon = 3;
+    int32 altitude = 4;
+    int32 vertical_speed = 5;
+    int32 speed = 6;
+    int32 source = 8;
+}
+
+message VectorItem {
+    uint64 x = 1;
+    uint64 y = 2;
+    int32 z = 3;
+}
+
+message VectorGroup {
+    repeated VectorItem items = 1;
+}
+
+message FollowFlightResponse {
+    AircraftInfo aircraft_info = 1;
+    FlightSchedule schedule = 3;
+    PerformanceStats stats = 4;
+    FlightData snapshot = 5;
+    repeated PositionHistory history = 6;
+    VectorGroup vectors = 7;
+}
+
+
+
+
+message FollowFlightRequest {
+    fixed32 flight_id = 1;
+    optional uint32 mode = 2;
+}
