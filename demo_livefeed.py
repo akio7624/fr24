@@ -1,10 +1,9 @@
 import json
-from pathlib import Path
 import requests
 
 from fr24 import grpc
-from fr24.request_builder import MakeRequestGrpc
-from fr24.response_dump import DumpResponse
+from fr24.dump_livefeed import LiveFeedDump
+from fr24.request_builder_livefeed import MakeRequestGrpc
 
 
 request_builder = MakeRequestGrpc()
@@ -22,8 +21,7 @@ headers = {
 
 resp = requests.post(URL, headers=headers, data=request_payload)
 resp.raise_for_status()
-# Path("output/response_body.bin").write_bytes(resp.content)
 
 protobuf_raw = grpc.get_grpc_message(resp.content)
-dump_result = DumpResponse().dump(protobuf_raw)
+dump_result = LiveFeedDump().dump("response", protobuf_raw)
 print(json.dumps(dump_result, indent=4, ensure_ascii=False))

@@ -1,9 +1,8 @@
 import json
-import struct
 from google.protobuf.json_format import ParseDict
 
 from fr24 import grpc
-from schema import req_pb2
+from schema import livefeed_pb2
 
 class MakeRequestGrpc:
     def __init__(self):
@@ -13,7 +12,7 @@ class MakeRequestGrpc:
         self.PAYLOAD_DICT = json.loads(open(path).read())
 
     def make(self) -> bytes:
-        req = req_pb2.FeedRequest()
+        req = livefeed_pb2.LiveFeedRequest()
         ParseDict(self.PAYLOAD_DICT, req)
         body = req.SerializeToString()
         grpc_raw = grpc.serialize_grpc_message(body, compressed=False)
