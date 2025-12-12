@@ -1,6 +1,5 @@
 syntax = "proto3";
 package fr24.livefeed;
-
 import "google/protobuf/field_mask.proto";
 
 
@@ -79,115 +78,161 @@ enum IconType {
 
 
 
-
-message IntRange {
+// C14339l0
+message Range {
   int32 min = 1;
   int32 max = 2;
 }
 
-message AirlineFilter {
+// C14338l
+message Airline {
   string icao = 1;
-  AirlineOperatorMode mode = 2;
+  int32 type = 2;
 }
 
-message LocationFilter {
+// C14344n
+message Location {
   string iata = 1;
-  int32 country = 2;
-  Direction direction = 3;
+  int32 countryId = 2;
+  int32 type = 3;
 }
 
+// C14355r0
 message Bounds {
-  float north = 1;
-  float south = 2;
-  float west = 3;
-  float east = 4;
+  double minLat = 1;
+  double maxLat = 2;
+  double minLon = 3;
+  double maxLon = 4;
 }
 
+// C14349o1
 message Settings {
   repeated DataSource sources = 1;
   repeated AircraftCategory services = 2;
-  TrafficType traffic_type = 3;
-  bool only_restricted = 4;
+  TrafficType trafficType = 3;
+  bool onlyRestricted = 4;
 }
 
+// C14366x
 message Filters {
-  repeated IntRange altitude_ranges = 1;
-  repeated IntRange speed_ranges = 2;
-  repeated AirlineFilter airlines = 3;
+  repeated Range altitudeRanges = 1;
+  repeated Range speedRanges = 2;
+  repeated Airline airlines = 3;
   repeated string callsigns = 4;
   repeated string radars = 5;
   repeated string regs = 6;
-  repeated LocationFilter airports = 7;
+  repeated Location airports = 7;
   repeated string flights = 8;
   repeated string types = 9;
-  repeated IntRange birth_year_ranges = 10;
+  repeated Range birthYearRanges = 10;
   repeated int32 squawks = 11;
-  repeated LocationFilter origins = 12;
-  repeated LocationFilter destinations = 13;
+  repeated Location origins = 12;
+  repeated Location destinations = 13;
   repeated AircraftCategory categories = 14;
   repeated string airspaces = 15;
 }
 
+// C14310b1
 message PositionDelta {
-  int32 delta_lat = 1;
-  int32 delta_lon = 2;
-  int32 delta_ms  = 3;
+  int32 deltaLat = 1;
+  int32 deltaLon = 2;
+  int32 deltaMs = 3;
 }
 
+// C14307a1
 message PositionBuffer {
-  repeated PositionDelta recent_positions = 1;
+  repeated PositionDelta recentPositions = 1;
 }
 
-message StatsItem {
+// C14328h1
+message StatsEntry {
   DataSource source = 1;
   int32 count = 2;
 }
 
+// C14331i1
 message Stats {
-  repeated StatsItem total = 1;
+  repeated StatsEntry total = 1;
 }
 
-message RouteInfo {
-  string route = 1;
+// C14316d1
+message Route {
+  string from = 1;
+  string to = 2;
+  string divertedTo = 3;
 }
 
-message ScheduleInfo {
-  int32 departure_time = 1;
-  int32 arrival_time = 2;
+// C14319e1
+message Schedule {
+  int32 std = 1;
+  int32 etd = 2;
+  int32 atd = 3;
+  int32 sta = 4;
+  int32 eta = 5;
+  int32 ata = 6;
+  int32 progressPct = 7;
 }
 
+// C14358t
 message EmsAvailability {
-  int32 level = 1;
+  bool qnh = 1;
+  bool amcp = 2;
+  bool afms = 3;
+  bool oat = 4;
+  bool ias = 5;
+  bool tas = 6;
+  bool mach = 7;
+  bool agps = 8;
+  bool agpsdiff = 9;
+  bool apflags = 10;
+  bool windDir = 11;
+  bool windSpd = 12;
+  bool rs = 13;
 }
 
+// C14360u
 message EmsInfo {
-  string details = 1;
+  int32 qnh = 1;
+  int32 amcp = 2;
+  int32 afms = 3;
+  int32 oat = 4;
+  int32 ias = 5;
+  int32 tas = 6;
+  int32 mach = 7;
+  int32 agps = 8;
+  int32 agpsdiff = 9;
+  int32 apflags = 10;
+  int32 windDir = 11;
+  int32 windSpd = 12;
+  int32 rs = 13;
 }
 
+// C14364w
 message ExtraInfo {
   string flight = 1;
   string reg = 2;
-  RouteInfo route = 3;
+  Route route = 3;
   string type = 4;
   int32 squawk = 5;
   int32 vspeed = 6;
   string age = 7;
-  int32 country_of_reg = 8;
-  ScheduleInfo schedule = 9;
-  int32 logo_id = 10;
+  int32 countryOfReg = 8;
+  Schedule schedule = 9;
+  int32 logoId = 10;
   string airspace = 11;
-  EmsInfo ems_info = 12;
-  EmsAvailability ems_availability = 13;
-  int32 icao_address = 14;
-  int32 operated_by_id = 15;
-  bool squawk_availability = 16;
-  bool vspeed_availability = 17;
-  bool airspace_availability = 18;
-  string airspace_id = 19;
+  EmsInfo emsInfo = 12;
+  EmsAvailability emsAvailability = 13;
+  int32 icaoAddress = 14;
+  int32 operatedById = 15;
+  bool squawkAvailability = 16;
+  bool vspeedAvailability = 17;
+  bool airspaceAvailability = 18;
+  string airspaceId = 19;
 }
 
+// C14370z
 message Flight {
-  int32 flight_id = 1;
+  int32 flightId = 1;
   float lat = 2;
   float lon = 3;
   int32 track = 4;
@@ -196,40 +241,37 @@ message Flight {
   IconType icon = 7;
   FlightStatus status = 8;
   int64 timestamp = 9;
-  bool on_ground = 10;
+  bool onGround = 10;
   string callsign = 11;
   DataSource source = 12;
-  ExtraInfo extra_info = 13;
-  PositionBuffer position_buffer = 14;
-  int64 timestamp_ms = 15;
+  ExtraInfo extraInfo = 13;
+  PositionBuffer positionBuffer = 14;
+  int64 timestampMs = 15;
 }
 
 
 
 
 
-
-
-
-
-
+// C14342m0
 message LiveFeedRequest {
   Bounds bounds = 1;
   Settings settings = 2;
   repeated Filters filters = 3;
   repeated string fleets = 4;
-  bool highlight_mode = 5;
+  bool highlightMode = 5;
   bool stats = 6;
   int32 limit = 7;
   int32 maxage = 8;
-  VisibilityMode restriction_mode = 9;
-  google.protobuf.FieldMask field_mask = 10;
-  repeated int32 selected_flight_ids = 11;
+  VisibilityMode restrictionMode = 9;
+  google.protobuf.FieldMask fieldMask = 10;
+  repeated int32 selectedFlightIds = 11;
 }
 
+// C14345n0
 message LiveFeedResponse {
   repeated Flight flights = 1;
   Stats stats = 2;
-  repeated Flight selected_flights = 3;
-  int64 server_time_ms = 4;
+  repeated Flight selectedFlights = 3;
+  int64 serverTimeMs = 4;
 }

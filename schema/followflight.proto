@@ -5,132 +5,312 @@ package fr24.followflight;
 
 
 
-enum FlightSource {
-    SOURCE_UNKNOWN = 0;
-    ADSB = 1;
-    MLAT = 2;
-    FLARM = 3;
-    FAA = 4;
-    AUSTRALIA = 5;
-    SPIDERTRACKS = 6;
-    UAT = 7;
-    ESTIMATED = 8;
-    OTHER_DATA_SOURCE = 9;
+// EnumC14354r
+enum DataSource {
+  ADSB = 0;
+  MLAT = 1;
+  FLARM = 2;
+  FAA = 3;
+  ESTIMATED = 4;
+  SATELLITE = 5;
+  OTHER_DATA_SOURCE = 6;
+  UAT = 7;
+  SPIDERTRACKS = 8;
+  AUS = 9;
 }
 
+// EnumC14334j1
 enum FlightStatus {
-    STATUS_UNKNOWN = 0;
-    NORMAL = 1;
-    BACKGROUND = 2;
-    EMERGENCY = 3;
+  NORMAL = 0;
+  BACKGROUND = 1;
+  EMERGENCY = 2;
+  NOT_AVAILABLE = 3;
+  LIVE = 4;
+}
+
+// EnumC14318e0
+enum FlightStage {
+  UNKNOWN = 0;
+  ON_GROUND = 1;
+  ASCENDING = 2;
+  AIRBORNE = 3;
+  DESCENDING = 4;
+  DIVERSION = 5;
+}
+
+// EnumC14356s
+enum DelayStatus {
+  GRAY = 0;
+  GREEN = 1;
+  YELLOW = 2;
+  RED = 3;
+}
+
+// EnumC14333j0
+enum Icon {
+  B738 = 0;
+  FGTR = 1;
+  ASW20 = 2;
+  C206 = 3;
+  C303 = 4;
+  LJ60 = 5;
+  Q300 = 6;
+  B736 = 7;
+  Fokker100 = 8;
+  RJ85 = 9;
+  A320 = 10;
+  B757 = 11;
+  B767 = 12;
+  A3ST = 13;
+  MD11 = 14;
+  A330 = 15;
+  A343 = 16;
+  A346 = 17;
+  B777 = 18;
+  B747 = 19;
+  A380 = 20;
+  A225 = 21;
+  SI2 = 22;
+  EC = 23;
+  BALL = 24;
+  GRND = 25;
+  SLEI = 26;
+  DRON = 27;
+  SAT = 28;
+  ISS = 29;
+  CONC = 30;
+}
+
+// EnumC14325g1
+enum Service {
+  PASSENGER = 0;
+  CARGO = 1;
+  MILITARY_AND_GOVERNMENT = 2;
+  BUSINESS_JETS = 3;
+  GENERAL_AVIATION = 4;
+  HELICOPTERS = 5;
+  LIGHTER_THAN_AIR = 6;
+  GLIDERS = 7;
+  DRONES = 8;
+  GROUND_VEHICLES = 9;
+  OTHER_SERVICE = 10;
+  NON_CATEGORIZED = 11;
+}
+
+// EnumC14313c1
+enum RestrictionMode {
+  NOT_VISIBLE = 0;
+  PARTIALLY_VISIBLE = 1;
+  FULLY_VISIBLE = 2;
 }
 
 
 
 
 
-
-message PhotoInfo {
-    string photo_url = 1;
-    string author = 2;
-    string thumb_url = 3;
-    string medium_url = 4;
-    string large_url = 5;
+// C14336k0
+message Images {
+  string url = 1;
+  string copyright = 2;
+  string thumbnail = 3;
+  string medium = 4;
+  string large = 5;
+  string sideview = 6;
 }
 
+// C14335k
 message AircraftInfo {
-    int32 hex_id = 1;
-    string registration = 2;
-    string icao_type = 4;
-    int32 version = 5;
-    string model_name = 6;
-    int32 flag = 8;
-    repeated PhotoInfo photos = 11;
-    int32 airline_id = 13;
-    int32 airline_logo = 14;
-    string airline_name = 15;
-    int32 airline_country = 16;
+  int32 icaoAddress = 1;
+  string reg = 2;
+  int32 countryOfReg = 3;
+  string type = 4;
+  Icon icon = 5;
+  string fullDescription = 6;
+  string msn = 7;
+  Service service = 8;
+  string acBirthDate = 9;
+  int32 acAge = 10;
+  repeated Images images = 11;
+  bool isTestFlight = 12;
+  bool msnAvailable = 13;
+  bool ageAvailable = 14;
+  string registeredOwners = 15;
+  bool isCountryOfRegAvailable = 16;
 }
 
-message FlightSchedule {
-    string flight_number = 1;
-    int32 dep_airport_id = 2;
-    int32 arr_airport_id = 3;
-    int32 scheduled_out = 4;
-    int32 scheduled_in = 5;
-    int64 offblock_time = 7;
-    int64 onblock_time = 8;
-    int64 actual_out = 9;
-    string misc = 13;
+// C14322f1
+message ScheduleInfo {
+  string flightNumber = 1;
+  int32 operatedById = 2;
+  int32 paintedAsId = 3;
+  int32 originId = 4;
+  int32 destinationId = 5;
+  int32 divertedToId = 6;
+  int32 scheduledDeparture = 7;
+  int32 scheduledArrival = 8;
+  int32 actualDeparture = 9;
+  int32 actualArrival = 10;
+  string arrTerminal = 11;
+  string arrGate = 12;
+  string baggageBelt = 13;
 }
 
-message PerformanceStats {
-    int32 value1 = 1;
-    int32 value2 = 2;
-    int32 value3 = 3;
-    int32 value4 = 4;
-    int64 timestamp = 5;
-    int32 value6 = 6;
-    int32 value7 = 7;
-    int32 value8 = 8;
-    int32 value9 = 9;
-    int32 value10 = 10;
+// C14315d0
+message FlightProgress {
+  int32 traversedDistance = 1;
+  int32 remainingDistance = 2;
+  int32 elapsedTime = 3;
+  int32 remainingTime = 4;
+  int32 eta = 5;
+  int32 greatCircleDistance = 6;
+  int32 meanFlightTime = 7;
+  FlightStage flightStage = 8;
+  DelayStatus delayStatus = 9;
+  int32 progressPct = 10;
 }
 
-message FlightData {
-    int32 flight_id = 1;
-    float lat = 2;
-    float lon = 3;
-    int32 track = 4;
-    int32 altitude = 5;
-    int32 speed = 6;
-    bool on_ground = 7;
-    int64 timestamp_ms = 8;
-    int64 misc9 = 9;
-    string callsign = 10;
-    FlightSource source = 11;
-    string misc12 = 12;
-
-    bool flag14 = 14;
-    bool flag16 = 16;
-    bool flag18 = 18;
-
-    int64 timestamp2_ms = 21;
+// C14358t
+message EmsAvailability {
+  bool qnh = 1;
+  bool amcp = 2;
+  bool afms = 3;
+  bool oat = 4;
+  bool ias = 5;
+  bool tas = 6;
+  bool mach = 7;
+  bool agps = 8;
+  bool agpsdiff = 9;
+  bool apflags = 10;
+  bool windDir = 11;
+  bool windSpd = 12;
+  bool rs = 13;
 }
 
-message PositionHistory {
-    int64 timestamp = 1;
-    float lat = 2;
-    float lon = 3;
-    int32 altitude = 4;
-    int32 vertical_speed = 5;
-    int32 speed = 6;
-    int32 source = 8;
+// C14360u
+message EmsInfo {
+  int32 qnh = 1;
+  int32 amcp = 2;
+  int32 afms = 3;
+  int32 oat = 4;
+  int32 ias = 5;
+  int32 tas = 6;
+  int32 mach = 7;
+  int32 agps = 8;
+  int32 agpsdiff = 9;
+  int32 apflags = 10;
+  int32 windDir = 11;
+  int32 windSpd = 12;
+  int32 rs = 13;
 }
 
-message VectorItem {
-    uint64 x = 1;
-    uint64 y = 2;
-    int32 z = 3;
+// C14362v
+message FlightInfo {
+  int32 flightId = 1;
+  float lat = 2;
+  float lon = 3;
+  int32 track = 4;
+  int32 alt = 5;
+  int32 speed = 6;
+  FlightStatus status = 7;
+  int64 timestampMs = 8;
+  bool onGround = 9;
+  string callsign = 10;
+  DataSource source = 11;
+  EmsAvailability emsAvailability = 12;
+  EmsInfo emsInfo = 13;
+  bool squawkAvailability = 14;
+  int32 squawk = 15;
+  bool vspeedAvailability = 16;
+  int32 vspeed = 17;
+  bool airspaceAvailability = 18;
+  string airspace = 19;
+  string airspaceId = 20;
+  int64 serverTimeMs = 21;
 }
 
-message VectorGroup {
-    repeated VectorItem items = 1;
+// C14369y0
+message Point {
+  double latitude = 1;
+  double longitude = 2;
 }
 
+// C14352q
+message Coordinate {
+  string code = 1;
+  Point point = 2;
+}
+
+// C14368y
+message Arrival {
+  string airport = 1;
+  string area = 2;
+  Coordinate coordinate = 3;
+}
+
+// C14350p
+message AltArrival {
+  Arrival arrival = 1;
+  double length = 2;
+}
+
+// C14369y0
+message Waypoint {
+  double latitude = 1;
+  double longitude = 2;
+}
+
+// C14312c0
+message FlightPlan {
+  string departure = 1;
+  string destination = 2;
+  string flightplanIcao = 3;
+  double length = 4;
+  AltArrival altArrival1 = 5;
+  AltArrival altArrival2 = 6;
+  repeated Waypoint waypoints = 7;
+}
+
+// C14346n1
+message FlightTrail {
+  int64 snapshotId = 1;
+  float lat = 2;
+  float lon = 3;
+  int32 altitude = 4;
+  int32 spd = 5;
+  int32 heading = 6;
+  int32 vspd = 7;
+  DataSource source = 8;
+}
+
+// C14310b1
+message PositionDelta {
+  int32 delta_lat = 1;
+  int32 delta_lon = 2;
+  int32 delta_ms = 3;
+}
+
+// C14307a1
+message PositionBuffer {
+  repeated PositionDelta recentPositions = 1;
+}
+
+
+
+
+
+// C14309b0
 message FollowFlightResponse {
-    AircraftInfo aircraft_info = 1;
-    FlightSchedule schedule = 3;
-    PerformanceStats stats = 4;
-    FlightData snapshot = 5;
-    repeated PositionHistory history = 6;
-    VectorGroup vectors = 7;
+  AircraftInfo aircraftInfo = 1;
+  ScheduleInfo scheduleInfo = 2;
+  FlightProgress flightProgress = 3;
+  FlightInfo flightInfo = 4;
+  FlightPlan flightPlan = 5;
+  repeated FlightTrail flightTrail = 6;
+  PositionBuffer positionBuffer = 7;
 }
 
-
-
-
+// C14321f0
 message FollowFlightRequest {
-    fixed32 flight_id = 1;
-    optional uint32 mode = 2;
+  int32 flightId = 1;
+  RestrictionMode restrictionMode = 2;
 }
