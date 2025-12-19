@@ -99,10 +99,10 @@ message Location {
 
 // C14355r0
 message Bounds {
-  double minLat = 1;
-  double maxLat = 2;
-  double minLon = 3;
-  double maxLon = 4;
+  float north = 1;
+  float south = 2;
+  float west = 3;
+  float east = 4;
 }
 
 // C14349o1
